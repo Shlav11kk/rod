@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мои любимые родители ❤️</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #ffe4e1;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            color: #333;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        #moving-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        .moving-item {
+            position: absolute;
+            font-size: 3rem;
+            opacity: 0.7;
+            user-select: none;
+            animation: slideRight 12s linear infinite;
+        }
+
+        @keyframes slideRight {
+            0% { transform: translateX(-100px); opacity: 0; }
+            10% { opacity: 0.7; }
+            90% { opacity: 0.7; }
+            100% { transform: translateX(110vw); opacity: 0; }
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(8px);
+            box-shadow: 0 4px 30px rgba(0,0,0,0.1);
+            border-radius: 30px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-family: 'Georgia', serif;
+            font-size: 2.5rem;
+            color: #c2185b;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 0px rgba(255,255,255,0.8);
+            animation: bounce 2s infinite;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .gallery {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            gap: 15px;
+            padding: 10px 0;
+            margin-bottom: 20px;
+            scrollbar-width: thin;
+        }
+        .gallery img {
+            flex: 0 0 auto;
+            width: 90%;
+            max-width: 500px;
+            height: 400px;
+            object-fit: cover;
+            border-radius: 25px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            scroll-snap-align: center;
+            border: 4px solid white;
+        }
+        .gallery::-webkit-scrollbar {
+            height: 8px;
+        }
+        .gallery::-webkit-scrollbar-thumb {
+            background: #c2185b;
+            border-radius: 10px;
+        }
+
+        .button-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .btn {
+            padding: 15px 10px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: white;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+        }
+        .btn:active {
+            transform: scale(0.95);
+        }
+
+        .btn-mom { background-color: #e91e63; }
+        .btn-dad { background-color: #2196f3; }
+        .btn-heart { background-color: #ff5722; }
+        .btn-surprise { background-color: #9c27b0; grid-column: span 2; }
+
+        .message-box {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 15px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border: 2px dashed #c2185b;
+            font-size: 1.1rem;
+        }
+
+        footer {
+            margin-top: 30px;
+            font-size: 1.2rem;
+            color: #880e4f;
+        }
+        .hearts {
+            font-size: 2rem;
+        }
+        
+        #confetti-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 999;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="moving-layer"></div>
+
+    <div class="container">
+        <h1>Спасибо, что вы у меня есть! ❤️</h1>
+        <p style="font-style: italic; color: #555;">Вы лучшие родители в мире!</p>
+
+        <div class="gallery">
+            <!-- ВАШИ ФОТОГРАФИИ (лежат в той же папке) -->
+            <img src="photo_5271849786799758369_y.jpg" alt="Мама и папа 1">
+            <img src="photo_5271849786799758368_y.jpg" alt="Мама и папа 2">
+            <img src="photo_5271849786799758357_y.jpg" alt="Мама и папа 3">
+        </div>
+
+        <div class="button-grid">
+            <button class="btn btn-mom" onclick="showMessage('Мамочка, ты самая красивая и любимая! 💖')">💋 Поцеловать маму</button>
+            <button class="btn btn-dad" onclick="showMessage('Папа, ты мой герой! Крепко обнимаю тебя! 🤗')">🤗 Обнять папу</button>
+            <button class="btn btn-heart" onclick="showMessage('Ваша любовь греет меня каждый день! ❤️')">❤️ Семейное тепло</button>
+            <button class="btn btn-surprise" onclick="triggerConfetti()">🎉 СЮРПРИЗ!</button>
+        </div>
+
+        <div id="messageDisplay" class="message-box">
+            Нажми на кнопку, я скажу им что-то важное...
+        </div>
+
+        <footer>
+            <div class="hearts">💕 Я вас очень сильно люблю! 💕</div>
+        </footer>
+    </div>
+
+    <canvas id="confetti-canvas"></canvas>
+
+    <script>
+        function showMessage(text) {
+            const box = document.getElementById('messageDisplay');
+            box.style.transform = 'scale(0.9)';
+            setTimeout(() => {
+                box.textContent = text;
+                box.style.transform = 'scale(1)';
+            }, 150);
+        }
+
+        function triggerConfetti() {
+            const canvas = document.getElementById('confetti-canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            let pieces = [];
+            const colors = ['#f00', '#0f0', '#00f', '#ff0', '#f0f', '#0ff'];
+
+            for (let i = 0; i < 150; i++) {
+                pieces.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height - canvas.height,
+                    w: Math.random() * 10 + 5,
+                    h: Math.random() * 6 + 3,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    vy: Math.random() * 4 + 2,
+                    vx: (Math.random() - 0.5) * 2,
+                    rotation: Math.random() * 360
+                });
+            }
+
+            function update() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                let alive = false;
+                for (let p of pieces) {
+                    p.y += p.vy;
+                    p.x += p.vx;
+                    p.rotation += 5;
+                    if (p.y < canvas.height + 10) alive = true;
+                    ctx.save();
+                    ctx.translate(p.x, p.y);
+                    ctx.rotate(p.rotation * Math.PI / 180);
+                    ctx.fillStyle = p.color;
+                    ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h);
+                    ctx.restore();
+                }
+                if (alive) requestAnimationFrame(update);
+                else ctx.clearRect(0, 0, canvas.width, canvas.height);
+            }
+            update();
+        }
+
+        function createMovingItems() {
+            const layer = document.getElementById('moving-layer');
+            const emojis = ['🐕', '❤️', '✨', '🐕', '🥰', '🐕'];
+            
+            for (let i = 0; i < 12; i++) {
+                const el = document.createElement('div');
+                el.className = 'moving-item';
+                el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+                el.style.top = Math.random() * 90 + '%';
+                el.style.animationDelay = Math.random() * 15 + 's';
+                el.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                let size = 2 + Math.random() * 2;
+                el.style.fontSize = size + 'rem';
+                layer.appendChild(el);
+            }
+        }
+        
+        window.onload = function() {
+            createMovingItems();
+            
+            const hearts = document.querySelector('.hearts');
+            let emojis = ['💕', '💖', '💗', '💝', '❤️‍🔥'];
+            setInterval(() => {
+                hearts.textContent = emojis[Math.floor(Math.random() * emojis.length)] + ' Я вас очень сильно люблю! ' + emojis[Math.floor(Math.random() * emojis.length)];
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
